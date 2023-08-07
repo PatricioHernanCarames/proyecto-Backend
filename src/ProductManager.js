@@ -87,26 +87,4 @@ class ProductManager {
 }
 
 
-const filePath = 'products.json';
-
-
-const manager = new ProductManager(filePath);
-
-
-manager.addProduct('Laptop', 'Laptop computer', 1000, 'this.jpg', 236, 100);
-manager.addProduct('Gamer PC', 'Desktop computer', 10000, 'this.jpg', 237, 50);
-manager.addProduct('Gamer headset', 'Accessories', 70, 'this.jpg', 238, 200);
-
-console.log(manager.getProducts());
-
-const updatedProduct = manager.updateProduct(1, {
-  price: 1200,
-  stock: 80,
-});
-
-console.log('Updated Product:', updatedProduct);
-
-const deletedProduct = manager.deleteProduct(2);
-console.log('Deleted Product:', deletedProduct);
-
-console.log(manager.getProducts());
+export default ProductManager();
