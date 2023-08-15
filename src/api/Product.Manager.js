@@ -6,6 +6,7 @@ class ProductManager {
     this.products = this.loadProductsFromFile();
     this.nextId = this.calculateNextId();
   }
+  
 
   
   loadProductsFromFile() {
