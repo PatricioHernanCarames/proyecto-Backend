@@ -2,6 +2,7 @@ import express from "express";
 import productsRouter from "../routes/products.router.js"
 import cartRouter from "../routes/cart.router.js"
 import __dirname from "./utils.js"
+import viewsRouter from "../routes/view.router.js"
 
 const app = express();
 const server = 8080;
@@ -18,7 +19,7 @@ app.engine("handlebars", handlebars.engine());
 app.set("view engine", "handlebars");
 app.set("views",__dirname + "/views")
 
-
+app.use("/", viewsRouter);
 
 app.listen(server, () => {
   console.log(`Server is running on port ${server}`);
