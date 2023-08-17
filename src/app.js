@@ -4,6 +4,7 @@ import productsRouter from "../routes/products.router.js";
 import cartRouter from "../routes/cart.router.js";
 import viewsRouter from "../routes/view.router.js";
 import __dirname from './utils.js';
+import handlebars from 'express-handlebars'
 
 const app = express();
 const server = 8080;
