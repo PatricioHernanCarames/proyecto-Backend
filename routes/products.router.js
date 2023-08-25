@@ -17,6 +17,8 @@ productsRouter.get("/api/products", (req, res) => {
     if (!limit) {
       const products = productManager.getProducts();
       res.send(products);
+      res.render(products);
+      io.emit("products",{products : products})
     } else {
       const limitNum = parseInt(limit, 10);
 

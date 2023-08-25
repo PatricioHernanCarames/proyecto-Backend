@@ -5,14 +5,16 @@ import cartRouter from "../routes/cart.router.js";
 import viewsRouter from "../routes/view.router.js";
 import __dirname from './utils.js';
 import handlebars from 'express-handlebars'
+import { Server } from "socket.io";
 
 const app = express();
-const server = 8080;
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
+app.engine('handlebars', handlebars.engine())
 app.set("view engine", "handlebars");
 app.set("views", join(__dirname, 'views'));
 
@@ -22,6 +24,13 @@ app.use("/api/carts", cartRouter);
 
 app.use("/", viewsRouter);
 
-app.listen(server, () => {
-  console.log(`Server is running on port ${server}`);
-});
+const server = app.listen(8080, () => {
+  console.log('Server ON')
+})
+
+const io = new Server(server);
+
+io.on("connection", (socket)=>{
+  console.log(`usuario conectado @ ${socket}`)
+  socket.emit("allProducts", productManager.getProducts());
+})

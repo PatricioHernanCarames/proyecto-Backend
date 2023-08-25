@@ -18,6 +18,7 @@
   "homepage": "https://github.com/PatricioHernanCarames/proyecto-Backend#readme",
   "dependencies": {
     "express-handlebars": "^7.1.2",
-    "moment": "^2.29.4"
+    "moment": "^2.29.4",
+    "socket.io": "^4.7.2"
   }
 }
