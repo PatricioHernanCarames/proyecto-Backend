@@ -1,4 +1,5 @@
 import express from "express";
+import mongoose from "mongoose";
 import { join } from "path";
 import productsRouter from "../routes/products.router.js";
 import cartRouter from "../routes/cart.router.js";
@@ -23,6 +24,20 @@ app.use("/api/products", productsRouter);
 app.use("/api/carts", cartRouter);
 
 app.use("/", viewsRouter);
+
+mongoose.connect("mongodb+srv://PatricioHCarames:Back1234@backende-commerce.8rpdxkg.mongodb.net/?retryWrites=true&w=majority", {
+  useNewUrlParser: true,
+  useUnifiedTopology:true,
+});
+
+const db =mongoose.connection();
+
+db.on("error", (error)=>{
+  console.log(`Error ${error}`);  });
+
+  db.once("open",()=>{
+    console.log("Connected to mongoDB")
+  })
 
 const server = app.listen(8080, () => {
   console.log('Server ON')
