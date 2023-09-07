@@ -28,16 +28,8 @@ app.use("/", viewsRouter);
 mongoose.connect("mongodb+srv://PatricioHCarames:Back1234@backende-commerce.8rpdxkg.mongodb.net/?retryWrites=true&w=majority", {
   useNewUrlParser: true,
   useUnifiedTopology:true,
-});
+}).then((conn)=>{console.log("connected to MongoDB")})
 
-const db =mongoose.connection();
-
-db.on("error", (error)=>{
-  console.log(`Error ${error}`);  });
-
-  db.once("open",()=>{
-    console.log("Connected to mongoDB")
-  })
 
 const server = app.listen(8080, () => {
   console.log('Server ON')
