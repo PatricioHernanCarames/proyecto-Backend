@@ -25,7 +25,7 @@ app.use("/api/carts", cartRouter);
 
 app.use("/", router);
 
-mongoose.connect("mongodb+srv://PatricioHCarames:Back1234@backende-commerce.8rpdxkg.mongodb.net/?retryWrites=true&w=majority", {
+mongoose.connect("mongodb+srv://PatricioHCarames:Back1234@backende-commerce.8rpdxkg.mongodb.net/Products", {
   useNewUrlParser: true,
   useUnifiedTopology:true,
 }).then((conn)=>{console.log("connected to MongoDB")})

@@ -1,43 +1,41 @@
 import { Router, json } from "express";
 import Product from "../dao/models/ProductModel.js";
-import fs from "fs"; 
 const productsRouter = Router();
 
 productsRouter.use(json());
 
 productsRouter.get("/", async (req, res) => {
-  const limit = req.query.limit;
-
   try {
-    if (!limit) {
-      const productsFromDB = await Product.find();
+    const limit = parseInt(req.query.limit, 10) || 10;
+    const page = parseInt(req.query.page, 10) || 1;
+    const skip = (page - 1) * limit;
+    const sortField = req.query.sortField || "price";
+    const sortOrder = req.query.sortOrder === "desc" ? -1 : 1;
 
-      const productsFromFile = fetchProductsFromFile();
+    const products = await Product.find()
+      .sort({ [sortField]: sortOrder })
+      .skip(skip)
+      .limit(limit);
 
-      const mergedProducts = mergeProducts(productsFromDB, productsFromFile);
+    const totalProducts = await Product.countDocuments();
+    const totalPages = Math.ceil(totalProducts / limit);
 
-      res.render("products", { products: mergedProducts });
-
-      io.emit("products", { products: mergedProducts });
-    } else {
-      const limitNum = parseInt(limit, 10);
-
-      if (isNaN(limitNum)) {
-        res.status(400).json({ error: "Invalid limit number" });
-      } else {
-        const productsFromDB = await Product.find().limit(limitNum);
-
-        const productsFromFile = fetchProductsFromFile().slice(0, limitNum);
-
-        const mergedProducts = mergeProducts(productsFromDB, productsFromFile);
-
-        res.json(mergedProducts);
-      }
-    }
+    res.json({
+      products,
+      pagination: {
+        totalProducts,
+        limit,
+        currentPage: page,
+        totalPages,
+      },
+    });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+
+
 
 productsRouter.get("/:pid", async (req, res) => {
   try {
