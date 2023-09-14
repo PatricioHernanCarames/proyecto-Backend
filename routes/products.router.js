@@ -1,12 +1,11 @@
 import { Router, json } from "express";
 import Product from "../dao/models/ProductModel.js";
-import fs from "fs"; // Import the fs module for file system operations
-
+import fs from "fs"; 
 const productsRouter = Router();
 
 productsRouter.use(json());
 
-productsRouter.get("/api/products", async (req, res) => {
+productsRouter.get("/", async (req, res) => {
   const limit = req.query.limit;
 
   try {
@@ -40,7 +39,7 @@ productsRouter.get("/api/products", async (req, res) => {
   }
 });
 
-productsRouter.get("/api/products/:pid", async (req, res) => {
+productsRouter.get("/:pid", async (req, res) => {
   try {
     const { pid } = req.params;
 
