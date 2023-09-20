@@ -1,34 +1,35 @@
 class CartManager {
-  async addCart(cart) {
-    const newCart = new Cart(cart);
-    await newCart.save();
-    return newCart;
-  }
+  
+  async addProductToCart(cartId, productId, quantity) {
+    try {
+      
+      const cart = await Cart.findById(cartId);
 
-  async getCart() {
-    return await cart.find();
-  }
+      if (!cart) {
+        throw new Error(`Cart with ID ${cartId} not found.`);
+      }
 
-  async addToCart(cartId, productId, quantity) {
-    const cart = await Cart.findBId(cartId);
+      
+      const existingProduct = cart.products.find(
+        (product) => product.productId.toString() === productId
+      );
 
-    if (!cart) {
-      throw new Error(`the cart id ${cartId} does not exist`);
+      if (existingProduct) {
+        
+        existingProduct.quantity += quantity;
+      } else {
+        
+        cart.products.push({ productId, quantity });
+      }
+
+      
+      await cart.save();
+
+      return cart;
+    } catch (error) {
+      throw error;
     }
-    const productIndex = cart.findIndex(p=>p.productId.toString() === productId)
-    if (productIndex > -1){
-      cart.products[productIndex].quantity += quantity;
-      console.log('updated', cart.products[productIndex])
-    }else{
-      cart.products.push({productId,quantity});
-    }
-    await cart.save();
-    return cart;
-
-  }
-
-  async deleteCartById(cartId){
-    return await Cart.findByIdAndDelete(cartId);
   }
 }
-export default CartManager;
+
+module.exports = CartManager;
