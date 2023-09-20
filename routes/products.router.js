@@ -59,6 +59,16 @@ productsRouter.get("/:pid", async (req, res) => {
   }
 });
 
+router.get('/products', async (req, res)=>{
+  try {
+    const products = await Product.find();
+    res.render('products', {products});
+  } catch (error) {
+    console.error(error);
+    res.ststus(500).send('An error ocurred loading products DB')
+  }
+})
+
 function fetchProductsFromFile() {
   try {
     const data = fs.readFileSync(`${__dirname}/api/products.json`, "utf-8");
@@ -88,5 +98,7 @@ function mergeProducts(productsFromDB, productsFromFile) {
 
   return mergedProducts;
 }
+
+
 
 export default productsRouter;

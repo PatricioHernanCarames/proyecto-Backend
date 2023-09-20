@@ -1,0 +1,13 @@
+<h1>Lista de productos</h1>
+<ul>
+    {{#each products}}
+    <li>
+        <a href="/products/{{this._id}}">{{this.name}}</a>
+
+        <form action="/carts/{{cartId}}/products/{{this._id}}" method="post">
+            <button type="submit">Agregar al Carrito</button>
+        
+        </form>
+    </li>
+    {{/each}}
+</ul>

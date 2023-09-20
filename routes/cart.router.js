@@ -150,4 +150,20 @@ router.delete("/:cid", async (req, res) => {
   }
 });
 
+router.get('/carts/:cid',async (req,res)=>{
+  const {cid} = req.params
+  try{
+    const cart = await Cart.findById(cid);
+    if(!cart){
+      res.status(404).send('Cart not found');
+      return;    
+    }
+    res.render('cart', {cart});
+
+  }catch(error){
+      console.error(error);
+      res.status(500).send('An error ocurred loading the Cart');
+  }
+})
+
 export default router;
