@@ -1,27 +1,45 @@
 import express from "express";
 import mongoose from "mongoose";
-import { join } from "path";
+import handlebars from 'express-handlebars'
+import { Server } from "socket.io";
+import session from "express-session";
+import MongoStore from "connect-mongo";
+
 import productsRouter from "../routes/products.router.js";
 import cartRouter from "../routes/cart.router.js";
 import router from "../routes/view.router.js";
+import {AuthRouter} from "../routes/auth.routes.js"
+import {WebRouter} from "../routes/web.routes.js"
 import __dirname from './utils.js';
-import handlebars from 'express-handlebars'
-import { Server } from "socket.io";
+
 
 const app = express();
 
-
+//middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.set("views",join( __dirname +"/views"))
-app.engine('handlebars', handlebars.engine())
+app.use(
+  session({
+  store:MongoStore.create({
+      mongoUrl:"mongodb+srv://PatricioHCarames:Back1234@backende-commerce.8rpdxkg.mongodb.net/Products",
+  }),
+  secret:"claveSecreta",
+  resave:true,
+  saveUninitialized:true
+}))
+
+//configuracion de handlebars
+app.set("views", __dirname +"/views");
+app.engine('handlebars', handlebars.engine());
 app.set("view engine", "handlebars");
-//app.set("views",path.join(__dirname, 'views'));
 
 
+//routes
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartRouter);
+app.use("/api/sessions", AuthRouter)
+app.use(WebRouter);
 
 app.use("/", router);
 
@@ -38,6 +56,6 @@ const server = app.listen(8080, () => {
 const io = new Server(server);
 
 io.on("connection", (socket)=>{
-  console.log(`usuario conectado @ ${socket}`)
+  console.log(`usuario conectado @ ${socket.id}`)
   socket.emit("allProducts", productManager.getProducts());
 })

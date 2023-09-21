@@ -10,8 +10,17 @@ router.get("/chat",(req,res)=>{
   res.render("chat");
 })
 
-router.get("/load",(req,res)=>{
-  res.render("realTimeProducts");
-})
+router.get("/login",(req,res)=>{
+  res.render("login");
+});
+
+router.get("/signup",(req,res)=>{
+  res.render("registro");
+});
+
+router.get("/profile",(req,res)=>{
+  console.log(req.session);
+  res.render("perfil");
+});
 
 export default router;
