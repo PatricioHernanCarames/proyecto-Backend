@@ -19,8 +19,10 @@ router.get("/signup",(req,res)=>{
 });
 
 router.get("/profile",(req,res)=>{
-  console.log(req.session);
-  res.render("perfil");
+
+  const {user} = req.user;
+  res.render("profile", {user})
+  
 });
 
 export default router;

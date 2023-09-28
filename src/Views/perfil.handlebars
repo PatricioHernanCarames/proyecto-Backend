@@ -1,1 +1,11 @@
-<h1>pagina perfil</h1>
+<h1>Página de Perfil</h1>
+
+<!-- Check if the user is logged in -->
+{{#if user}}
+  <p>Bienvenido, {{user}}</p>
+  <form action="/logout" method="post">
+    <button type="submit">Cerrar Sesión</button>
+  </form>
+{{else}}
+  <p>No has iniciado sesión. <a href="/login">Inicia sesión</a></p>
+{{/if}}

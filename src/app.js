@@ -23,6 +23,7 @@ app.use(
   session({
   store:MongoStore.create({
       mongoUrl:"mongodb+srv://PatricioHCarames:Back1234@backende-commerce.8rpdxkg.mongodb.net/Products",
+      ttl: 180,
   }),
   secret:"claveSecreta",
   resave:true,
