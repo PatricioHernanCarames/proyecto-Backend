@@ -64,7 +64,7 @@ router.post("/login", async (req, res) => {
 router.post("/logout",(req,res)=>{
   req.session.destroy(error=>{
       if(error) return res.send("La sesion no se pudo cerrar");
-      res.redirect("/");
+      res.redirect("/login");
   });
 });
 
