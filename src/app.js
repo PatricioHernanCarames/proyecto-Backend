@@ -6,12 +6,12 @@ import session from "express-session";
 import MongoStore from "connect-mongo";
 import {Session, Connection} from "../src/connection.js"
 
-import productsRouter from "../routes/products.router.js";
-import cartRouter from "../routes/cart.router.js";
-import router from "../routes/view.router.js";
-import {AuthRouter} from "../routes/auth.routes.js"
-import {WebRouter} from "../routes/web.routes.js"
-import __dirname from './utils.js';
+import productsRouter from "./routes/products.router.js";
+import cartRouter from "./routes/cart.router.js";
+import router from "./routes/view.router.js";
+import {AuthRouter} from "./routes/auth.routes.js"
+import {WebRouter} from "./routes/web.routes.js"
+import {__dirname} from './utils.js';
 
 
 const app = express();

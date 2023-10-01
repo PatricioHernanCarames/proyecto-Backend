@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { UserModel } from "../dao/models/userModel.js";
 import bcrypt from "bcrypt";
+import { generateToken, isPasswordValid, createHash, validateToken } from "../utils.js";
+
 
 const router = Router();
 
@@ -10,7 +12,7 @@ router.post("/signup", async (req, res) => {
     const user = await UserModel.findOne({ email: email });
 
     if (!user) {
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await createHash(password);
       console.log(hashedPassword);
       const newUser = await UserModel.create({
         email,
@@ -43,10 +45,10 @@ router.post("/login", async (req, res) => {
      
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isValid = isPasswordValid(password, user.password);
     console.log("Password comparison result:", isPasswordValid);
 
-    if (!isPasswordValid) {
+    if (!isValid) {
       console.log("Invalid password");
       return res.status(401).json({ message: "Invalid email or password" });
     }
