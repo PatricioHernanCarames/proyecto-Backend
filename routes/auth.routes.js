@@ -4,15 +4,18 @@ import bcrypt from "bcrypt";
 
 const router = Router();
 
-
-
 router.post("/signup", async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await UserModel.findOne({ email: email });
 
     if (!user) {
-      const newUser = await UserModel.create({ email, password });
+      const hashedPassword = await bcrypt.hash(password, 10);
+      console.log(hashedPassword);
+      const newUser = await UserModel.create({
+        email,
+        password: hashedPassword,
+      });
       req.session.user = newUser.email;
 
       return res.redirect("/profile");
@@ -23,33 +26,45 @@ router.post("/signup", async (req, res) => {
     console.log(error);
   }
 });
-router.post('/login', async (req, res) => {
+
+router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
+  console.log("Received email:", email);
+  console.log("Received password:", password);
+
   try {
-    const user = await User.findOne({ email });
+    const user = await UserModel.findOne({ email });
+    console.log("User found in the database:", user);
 
     if (!user) {
-      return res.status(401).json({ message: 'Invalid email or password' });
+      console.log("User not found");
+      return res.status(401).json({ message: "Invalid email or password" });
+     
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
+    console.log("Password comparison result:", isPasswordValid);
 
     if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid email or password' });
+      console.log("Invalid password");
+      return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    res.status(200).redirect("/profile")
+    console.log("Login successful");
+    
+
+    res.redirect("/profile");
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error("Error during login:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
-router.post("/logout", (req, res) => {
-  req.session.destroy((error) => {
-    if (error) return res.send("La sesion no se pudo cerrar");
-    res.redirect("/");
+router.post("/logout",(req,res)=>{
+  req.session.destroy(error=>{
+      if(error) return res.send("La sesion no se pudo cerrar");
+      res.redirect("/");
   });
 });
 

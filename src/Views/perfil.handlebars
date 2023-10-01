@@ -2,7 +2,7 @@
 
 <!-- Check if the user is logged in -->
 {{#if user}}
-  <p>Bienvenido, {{user}}</p>
+  <p>Bienvenido, {{user.email}}</p>
   <form action="/logout" method="post">
     <button type="submit">Cerrar Sesión</button>
   </form>
