@@ -4,6 +4,7 @@ import handlebars from 'express-handlebars'
 import { Server } from "socket.io";
 import session from "express-session";
 import MongoStore from "connect-mongo";
+import {Session, Connection} from "../src/connection.js"
 
 import productsRouter from "../routes/products.router.js";
 import cartRouter from "../routes/cart.router.js";
@@ -19,8 +20,8 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(
-  session({
+app.use(Session)
+  /*session({
   store:MongoStore.create({
       mongoUrl:"mongodb+srv://PatricioHCarames:Back1234@backende-commerce.8rpdxkg.mongodb.net/Products",
       ttl: 180,
@@ -28,7 +29,7 @@ app.use(
   secret:"claveSecreta",
   resave:true,
   saveUninitialized:true
-}))
+})*/
 
 //configuracion de handlebars
 app.set("views", __dirname +"/views");
@@ -44,11 +45,12 @@ app.use(WebRouter);
 
 app.use("/", router);
 
-mongoose.connect("mongodb+srv://PatricioHCarames:Back1234@backende-commerce.8rpdxkg.mongodb.net/Products", {
+app.set(Connection);
+/*/mongoose.connect("mongodb+srv://PatricioHCarames:Back1234@backende-commerce.8rpdxkg.mongodb.net/Products", {
   useNewUrlParser: true,
   useUnifiedTopology:true,
 }).then((conn)=>{console.log("connected to MongoDB")})
-
+*/
 
 const server = app.listen(8080, () => {
   console.log('Server ON')

@@ -13,7 +13,8 @@ router.get("/signup",(req,res)=>{
 
 router.get("/profile",(req,res)=>{
     console.log(req.session);
-    res.render("perfil");
+    
+    res.render("perfil" );
 });
 
 export {router as WebRouter};
