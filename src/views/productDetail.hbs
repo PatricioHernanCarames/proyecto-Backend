@@ -1,0 +1,15 @@
+<h1>Detalle del producto</h1>
+<br>
+{{#if _id}}
+<h2>{{title}}</h2>
+<p>{{description}}</p>
+<br>
+<strong>Categoria: {{category}} </strong>
+<hr>
+<p>Precio: {{price}}</p>
+<p>Stock: {{stock}} </p>
+<button onclick="addToCart(`{{_id}}`)">Agregar al carrito</button>
+{{else}}
+<p>No hay detalle</p>
+{{/if}}
+<script src="/js/products.js"></script>
