@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { userManagerMongo } from "../dao/managers/userManagerMongo.js";
-import { UserModel } from "../dao/models/userModel.js";
+import { UserManagerMongo } from "../dao/managers/userManagerMongo.js";
+import { UserModel } from "../dao/models/user.model.js";
 import passport from "passport";
 
 const router = Router();
-const userManager = new userManagerMongo(UserModel);
+const userManager = new UserManagerMongo(UserModel);
 
 router.post(
   "/signup",

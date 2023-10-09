@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { PORT } from "../app.js";
-import { productManagerMongo } from "../dao/managers/productManagerMongo.js";
+import { ProductManagerMongo } from "../dao/managers/productManagerMongo.js";
 
-import { productModel } from "../dao/models/product.models.js";
+import { ProductModel } from "../dao/models/product.model.js";
 import { checkValidProductFields } from "../middlewares/validations.js";
 
-const productManager = new productManagerMongo(productModel);
+const productManager = new ProductManagerMongo(ProductModel);
 
 const router = Router();
 
@@ -110,4 +110,4 @@ router.delete("/:pid", async(req,res)=>{
     };
 });
 
-export {router as AuthRouter};
+export {router as productsRouter};

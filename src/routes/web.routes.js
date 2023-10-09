@@ -1,8 +1,8 @@
 import {Router} from "express";
-import {ProductManagerMongo} from "../daos/managers/productManagerMongo.js";
-import {ProductModel} from "../daos/models/product.model.js";
-import { CartManagerMongo } from "../daos/managers/cartManagerMongo.js";
-import { CartModel } from "../daos/models/cart.model.js";
+import {ProductManagerMongo} from "../dao/managers/productManagerMongo.js";
+import { ProductModel } from "../dao/models/product.model.js";
+import { CartManagerMongo } from "../dao/managers/cartManagerMongo.js";
+import { CartModel } from "../dao/models/cart.model.js";
 
 const router = Router();
 

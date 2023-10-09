@@ -3,7 +3,7 @@ import handlebars from "express-handlebars";
 import session from "express-session";
 import mongoStore from "connect-mongo";
 import path from "path";
-import {Sever} from "socket.io";
+import {Server} from "socket.io";
 import passport from "passport"
 
 
@@ -12,14 +12,14 @@ import passport from "passport"
 import {options} from "./config/options.js";
 import { __dirname } from "./utils.js";
 import {productsRouter} from "./routes/products.routes.js";
-import {cartRouter} from "./routes/cart.routes.js";
-import { WebRouter } from "./routes/web.routes.js";
+import {cartsRouter} from "./routes/carts.routes.js";
+import { webRouter } from "./routes/web.routes.js";
 import "./config/dbConnection.js";
 import {chatManagerMongo} from "./dao/managers/chatManagerMongo.js";
-import {chatModel} from "dao/managers/chat.model.js";
+import {ChatModel} from "./dao/models/chat.model.js";
 import { AuthRouter } from "./routes/auth.routes.js";
-import { initializedPassport } from "./config/config.passport.js";
-import { Server } from "http";
+import { initializePassport } from "./config/passport.config.js";
+//import { Server2 } from "http";
 
 
 const chatManager = new chatManagerMongo(ChatModel);
@@ -47,7 +47,7 @@ app.use(session({
     saveUninitialized :false  
 }));
 
-initializedPassport();
+initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -58,7 +58,7 @@ app.set('view engine', ".hbs");
 
 app.use(webRouter);
 app.use("/api/products", productsRouter);
-app.use("/api/cart", cartRouter);
+app.use("/api/cart", cartsRouter);
 app.use("/api/sessions", AuthRouter);
 
 socketServer.on("connection", async(socketConnected)=>{

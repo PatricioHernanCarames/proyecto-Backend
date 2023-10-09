@@ -1,9 +1,8 @@
 import path from "path" ;
 import bcrypt from "bcrypt";
 import { fileURLToPath } from "url";
-const __filename =path.dirname(fileURLToPath( import.meta.url ));
-
-export {__filename};
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+export {__dirname}
 
 export const createHash= (password)=>{
     return bcrypt.hashSync(password, bcrypt.genSaltSync());

@@ -1,12 +1,12 @@
 import { Router, response } from "express";
-import {cartManagerMongo} from "../dao/managers/cartManagerMongo.js";
-import {productManagerMongo} from "../dao/managers/productManagerMongo.js";
-import {cartModel} from "../dao/models/cart.model.js";
-import {productModel} from "../dao/models/product.model.js";
+import {CartManagerMongo} from "../dao/managers/cartManagerMongo.js";
+import {ProductManagerMongo} from "../dao/managers/productManagerMongo.js";
+import {CartModel} from "../dao/models/cart.model.js";
+import {ProductModel} from "../dao/models/product.model.js";
 
-const cartManager = new cartManagerMongo(cartModel);
+const cartManager = new CartManagerMongo(CartModel);
 
-const productManager = new productManagerMongo(productModel);
+const productManager = new ProductManagerMongo(ProductModel);
 
 const router = Router();
 
