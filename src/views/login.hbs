@@ -1,13 +1,11 @@
 <h1>Login</h1>
- <div>
-    <form action="/api/sessions/login" method="post">
-    <input type="text" placeholder="correo" name="email">
-    <br>
-    <input type="password" placeholder="contrasena" name="password">
-    <br>
-    <button type="submit">Iniciar sesion</button>
+
+<div>
+    <form method="post" action="/api/sessions/login">
+        <input type="text" placeholder="correo" name="email"/>
+        <br/>
+        <input type="password" placeholder="contrasena" name="password"/>
+        <br/>
+        <button type="submit">Iniciar sesion</button>
     </form>
-    <div>
-        <a href="/api/sessions/github"><button>Entrar con github</button></a>
-    </div>
- </div>
+</div>
