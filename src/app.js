@@ -60,7 +60,7 @@ app.use(webRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/sessions", authRouter);
-app.use("api/sessions", sessionRouter)
+app.use("/api", sessionRouter)
 
 ////configuración socket servidor
 // const messages=[];
@@ -78,3 +78,4 @@ socketServer.on("connection",async(socketConnected)=>{
         socketServer.emit("msgHistory", messages);
     });
 });
+

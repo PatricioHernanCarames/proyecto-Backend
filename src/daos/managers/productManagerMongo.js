@@ -6,8 +6,7 @@ class ProductManagerMongo{
     async addProduct(product){
         try {
             const data = await this.model.create(product);
-            const response = JSON.parse(JSON.stringify(data));
-            return response;
+            const response = data.toObject();
         } catch (error) {
             throw new Error(`Error al guardar: ${error}`);
         }
@@ -16,7 +15,7 @@ class ProductManagerMongo{
     async getProducts(){
         try {
             const data = await this.model.find();
-            const response = JSON.parse(JSON.stringify(data));
+            const response = data.toObject();
             return response;
         } catch (error) {
             throw new Error(`Error get all ${error}`);
@@ -41,7 +40,7 @@ class ProductManagerMongo{
             const data = await this.model.findById(id);
             if(data){
                 // console.log("data", data)
-                const response = JSON.parse(JSON.stringify(data));
+                const response = data.toObject();
                 return response;
             }
             throw new Error(`No se encontró el producto`);
@@ -53,7 +52,7 @@ class ProductManagerMongo{
     async updateProduct(id, product){
         try {
             const data = await this.model.findByIdAndUpdate(id, product,{new:true});
-            const response = JSON.parse(JSON.stringify(data));
+            const response = data.toObject();
             return response;
         } catch (error) {
             throw new Error(`Error al actualizar: no se encontró el id ${id}`);

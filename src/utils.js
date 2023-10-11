@@ -17,13 +17,17 @@ export const isValidPassword = (password, user)=>{
 }
 
 export const generateToken = (user)=>{
-    const token = jwt.sign({user}, PRIVATE_KEY, {expiresIn:'24h'})
-    return token;
+    const token = jwt.sign({user}, PRIVATE_KEY, {expiresIn:'24h'});
+    res.json({accessToken: token})
+
 }
 
-export const authToken= (req,res,next)=>{
-    const authHeader=req.headers.authorization;
-    if(!authHeader){return res.status(401).send({error:"not autenticated"});}
+
+export const authToken = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).send({ error: "not authenticated" });
+    }
 
     const token = authHeader.split(' ')[1];
     jwt.verify(token,PRIVATE_KEY,(error,credentials)=>{

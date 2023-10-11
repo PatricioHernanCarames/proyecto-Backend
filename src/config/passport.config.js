@@ -5,6 +5,8 @@ import { UserModel } from "../daos/models/user.model.js";
 import { createHash, isValidPassword } from "../utils.js";
 import { access } from "fs";
 
+
+
 export const initializePassport = ()=>{
 
     passport.use('github', new GitHubStrategy({
@@ -48,16 +50,16 @@ export const initializePassport = ()=>{
                     return done(null,false)
                 }
                 
-                let rol='user';
+                let role='user';
                 if (username.endsWith("@coder.com")) {
-                    rol = "admin";
+                    role = "admin";
                 }
                 
                 const newUser = {
                     name,
                     email:username,
                     password:createHash(password),
-                    rol
+                    role
                 };
                 const userCreated = await UserModel.create(newUser);
                 return done(null,userCreated)
@@ -97,3 +99,4 @@ export const initializePassport = ()=>{
         done(null, userDB)
     });
 }
+

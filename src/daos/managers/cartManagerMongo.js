@@ -8,7 +8,7 @@ class CartManagerMongo{
     async getCarts(){
         try {
             const data = await this.model.find();
-            const response = JSON.parse(JSON.stringify(data));
+            const response = data.toObject();;
             return response;
         } catch (error) {
             throw new Error(error.message);
@@ -19,7 +19,7 @@ class CartManagerMongo{
         try {
             const cart={};
             const data = await this.model.create(cart);
-            const response = JSON.parse(JSON.stringify(data));
+            const response = data.toObject();;
             return response;
         } catch (error) {
             throw new Error(`Error al guardar: ${error.message}`);
@@ -35,7 +35,7 @@ class CartManagerMongo{
             const data = await this.model.find({_id:id});
             // console.log("data: ", data);
             if(data){
-                const response = JSON.parse(JSON.stringify(data));
+                const response = data.toObject();;
                 return response[0];
             }
             throw new Error(`No se encontró el carrito con el id ${id}`);
@@ -57,7 +57,7 @@ class CartManagerMongo{
                 });
             };
             const data = await this.model.findByIdAndUpdate(cartId, cart,{new:true});
-            const response = JSON.parse(JSON.stringify(data));
+            const response = data.toObject();;
             return response;
         } catch (error) {
             throw new Error(error.message);
@@ -100,7 +100,7 @@ class CartManagerMongo{
                 throw new Error("El producto no existe en el carrito");
             };
             const data = await this.model.findByIdAndUpdate(cartId, cart,{new:true});
-            const response = JSON.parse(JSON.stringify(data));
+            const response = data.toObject();;
             return response;
         } catch (error) {
             throw new Error(error.message)

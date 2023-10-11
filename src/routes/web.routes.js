@@ -20,7 +20,7 @@ router.get("/products",async(req,res)=>{
         const {limit = 10,page=1,category,stock,sort="asc"} = req.query;
         const stockValue = stock==0 ? undefined : parseInt(stock);
         if(!["asc","desc"].includes(sort)){
-            return res.json({status:"error", mesage:"orden no valido"});
+            return res.send({status:"error", message:"orden no valido"});
         };
         const sortValue= sort === "asc" ? 1 : -1;
         // console.log('limit: ', limit, "page: ", page,"category: ", category, "stockValue: ", stockValue, "sortValue: ", sortValue);
