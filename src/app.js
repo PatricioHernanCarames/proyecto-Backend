@@ -2,9 +2,11 @@ import express from "express";
 import handlebars from "express-handlebars";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-import { options } from "./config/options.js";
-import{__dirname} from "./utils.js";
 import path from "path";
+
+import {sessionRouter} from "../src/routes/session.routes.js"
+import{__dirname} from "./utils.js";
+import { options } from "./config/options.js";
 import { productsRouter } from "./routes/products.routes.js";
 import { cartsRouter } from "./routes/carts.routes.js";
 import { webRouter } from "./routes/web.routes.js";
@@ -58,6 +60,7 @@ app.use(webRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/sessions", authRouter);
+app.use("api/sessions", sessionRouter)
 
 ////configuración socket servidor
 // const messages=[];
