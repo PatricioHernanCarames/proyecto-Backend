@@ -6,7 +6,7 @@ class chatManagerMongo{
     async addMessage(object){
         try {
             const data = await this.model.create(object);
-            const response = data.toObject();;
+            const response = JSON.parse(JSON.stringify(data));;
             return response;
         } catch (error) {
             throw new Error(`Error al guardar: ${error}`);
@@ -16,7 +16,7 @@ class chatManagerMongo{
     async getMessages(){
         try {
             const data = await this.model.find();
-            const response = data.toObject();
+            const response = JSON.parse(JSON.stringify(data));
             return response;
         } catch (error) {
             throw new Error(`Error get all ${error}`);

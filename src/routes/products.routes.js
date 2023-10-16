@@ -1,33 +1,17 @@
 import {Router} from "express";
 import {PORT} from "../app.js";
-// import { ProductManagerFile } from "../daos/managers/productManagerFile.js";
+
 import {ProductManagerMongo} from "../daos/managers/productManagerMongo.js";
 //importamos el modelo de productos
 import {ProductModel} from "../daos/models/product.model.js";
 import { checkValidProductFields } from "../middlewares/validations.js";
 
-//services
-// const productManager = new ProductManagerFile('products.json');
+
 const productManager = new ProductManagerMongo(ProductModel);
 
 const router = Router();
 
 
-// router.get("/",async(req,res)=>{
-//     try {
-//         const {limit} = req.query;
-//         const products = await productManager.getProducts();
-//         // console.log("products: ", products);
-//         if(limit && parseInt(limit)>0){
-//             const newArray = products.slice(0,limit);
-//             res.json({status:"success",result:newArray});
-//         } else {
-//             res.json({status:"success",result:products});
-//         }
-//     } catch (error) {
-//         res.status(400).json({message:error.message});
-//     }
-// });
 
 router.get("/",async(req,res)=>{
     try {
@@ -37,7 +21,7 @@ router.get("/",async(req,res)=>{
             return res.json({status:"error", mesage:"orden no valido"});
         };
         const sortValue= sort === "asc" ? 1 : -1;
-        // console.log('limit: ', limit, "page: ", page,"category: ", category, "stockValue: ", stockValue, "sortValue: ", sortValue);
+        
         let query={};
         if (category && stockValue) {
             query = { category: category, stock: {$gte:stockValue} };

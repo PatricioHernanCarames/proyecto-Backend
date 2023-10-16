@@ -3,39 +3,40 @@ import LocalStrategy  from "passport-local";
 import GitHubStrategy from "passport-github2"
 import { UserModel } from "../daos/models/user.model.js";
 import { createHash, isValidPassword } from "../utils.js";
-import { access } from "fs";
+
+
+import dotenv from 'dotenv';
+
+dotenv.config({ path: './process.env' })
 
 
 
 export const initializePassport = ()=>{
 
     passport.use('github', new GitHubStrategy({
-        clientID: 'Iv1.1b71fac663dc8a63' ,
-        clientSecret: '1ad946a0c680558093c3fab3ec94ff141ce921d5',
-        callbackURL:'http://localhost:8080/api/sesions/github-calback'
-    }, async(accessToken, refreshToken,profile,done)=>{
+        clientID: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        callbackURL: process.env.CALLBACK_URL
+    }, async (accessToken, refreshToken, profile, done) => {
         try {
             console.log(profile);
-            let user= await userService.findone({email:profile._json.email});
+            let user = await UserModel.findOne({ email: profile._json.email });
             if (!user) {
-                let newUser={
-                    first_name : profile._json.email,
-                    last_name:'',
-                    age:'18',
+                let newUser = {
+                    first_name: profile._json.name,  // adjusted this from email to name
+                    last_name: profile._json.surname || '',  // assuming a surname field exists
                     email: profile._json.email,
-                    password:''
+                    // No password since it's an OAuth user
                 }
-                let result = await userService.create(newUser);
+                let result = await UserModel.create(newUser);
                 done(null, result);
             } else {
                 done(null, user);
-                
             }
         } catch (error) {
-            return done(error)
+            return done(error);
         }
-
-    }))
+    }));
     
     passport.use("signupStrategy", new LocalStrategy(
         {

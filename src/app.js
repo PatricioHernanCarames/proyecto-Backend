@@ -3,10 +3,16 @@ import handlebars from "express-handlebars";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import path from "path";
+import  'dotenv/config';
+
+import dotenv from 'dotenv';
+dotenv.config({ path: './process.env' });  // Assuming your .env file is at the root of your project
+
+
 
 import {sessionRouter} from "../src/routes/session.routes.js"
 import{__dirname} from "./utils.js";
-import { options } from "./config/options.js";
+
 import { productsRouter } from "./routes/products.routes.js";
 import { cartsRouter } from "./routes/carts.routes.js";
 import { webRouter } from "./routes/web.routes.js";
@@ -18,10 +24,16 @@ import { authRouter } from "./routes/auth.routes.js";
 import passport from "passport";
 import { initializePassport } from "./config/passport.config.js";
 
+
 //service
 const chatManager = new chatManagerMongo(ChatModel);
 // Ejecucion del servidor
-export const PORT = 8080;
+export const PORT = process.env.PORT;
+console.log('Port:', process.env.PORT);
+console.log('Database URL:', process.env.DATABASE_URL);
+
+const claveSecreta = process.env.PRIVATE_KEY;
+
 const app = express();
 const httpServer = app.listen(PORT,()=>console.log(`Server listening on port ${PORT}`));
 
@@ -38,9 +50,9 @@ httpServer.on('error', error => console.log(`Error in server ${error}`));
 //configuracion session
 app.use(session({
     store: MongoStore.create({
-        mongoUrl:options.mongoDB.url
+        mongoUrl:process.env.DATABASE_URL
     }),
-    secret:"claveSecreta",
+    secret:claveSecreta,
     resave:false,
     saveUninitialized:false//para que no se guarde el estado de la sesión si no hay ninguna acción en é
 }));

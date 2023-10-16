@@ -2,8 +2,11 @@ import path from "path";
 import bcrypt from "bcrypt";
 import {fileURLToPath} from 'url';
 import  jwt  from "jsonwebtoken";
+import dotenv from 'dotenv';
 
-const PRIVATE_KEY= "CoderKeyQueFuncionaComoUnSecret";
+dotenv.config({ path: './process.env' });
+
+const privateKey= process.env.PRIVATE_KEY;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export {__dirname}
@@ -16,9 +19,14 @@ export const isValidPassword = (password, user)=>{
     return bcrypt.compareSync(password, user.password)
 }
 
-export const generateToken = (user)=>{
-    const token = jwt.sign({user}, PRIVATE_KEY, {expiresIn:'24h'});
-    res.json({accessToken: token})
+export const generateToken = (payload)=>{
+    const token = process.env.PRIVATE_KEY;
+    console.log({accessToken: token})
+    if(!token){
+        throw new Error('secret key is missing')
+    }
+
+   return jwt.sign(payload, token, {expiresIn:'1h'});
 
 }
 
@@ -30,7 +38,7 @@ export const authToken = (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
-    jwt.verify(token,PRIVATE_KEY,(error,credentials)=>{
+    jwt.verify(token,privateKey,(error,credentials)=>{
         if(error)return res.status(403).send({error: "not authorized"})
         req.user=credentials.user;
     next()
