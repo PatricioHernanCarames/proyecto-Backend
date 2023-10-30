@@ -1,60 +1,33 @@
 import express from "express";
-import handlebars from "express-handlebars";
+import { productsRouter } from "./routes/products.routes.js";
+import "./config/dbConnection.js";
+import passport from "passport";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-import path from "path";
-import  'dotenv/config';
-
-import dotenv from 'dotenv';
-dotenv.config({ path: './process.env' });  // Assuming your .env file is at the root of your project
-
-
-
-import {sessionRouter} from "../src/routes/session.routes.js"
-import{__dirname} from "./utils.js";
-
-import { productsRouter } from "./routes/products.routes.js";
-import { cartsRouter } from "./routes/carts.routes.js";
-import { webRouter } from "./routes/web.routes.js";
-import "./config/dbConnection.js";
-import {Server} from "socket.io";
-import { chatManagerMongo } from "./daos/managers/chatManagerMongo.js";
-import { ChatModel} from "./daos/models/chat.model.js";
-import { authRouter } from "./routes/auth.routes.js";
-import passport from "passport";
 import { initializePassport } from "./config/passport.config.js";
+import { authRouter } from "./routes/auth.routes.js";
+import { cartsRouter } from "./routes/carts.routes.js";
+import dotenv from 'dotenv';
+import mongoose from "mongoose"
 
+dotenv.config({ path: './process.env' });
 
-//service
-const chatManager = new chatManagerMongo(ChatModel);
-// Ejecucion del servidor
-export const PORT = process.env.PORT;
-console.log('Port:', process.env.PORT);
-console.log('Database URL:', process.env.DATABASE_URL);
-
-const claveSecreta = process.env.PRIVATE_KEY;
-
+const port = process.env.PORT;
 const app = express();
-const httpServer = app.listen(PORT,()=>console.log(`Server listening on port ${PORT}`));
 
-//adicional creamos un servidor para websocket.
-const socketServer = new Server(httpServer);
-
-//middlewares
+//middleware
 app.use(express.json());
-app.use(express.urlencoded({extended:true}));
-app.use(express.static(path.join(__dirname,"/public")));
 
-httpServer.on('error', error => console.log(`Error in server ${error}`));
+app.listen(port,()=>console.log(`Server ok`));
 
 //configuracion session
 app.use(session({
     store: MongoStore.create({
         mongoUrl:process.env.DATABASE_URL
     }),
-    secret:claveSecreta,
+    secret:"claveSecreta",
     resave:false,
-    saveUninitialized:false//para que no se guarde el estado de la sesión si no hay ninguna acción en é
+    saveUninitialized:false
 }));
 
 //configuracion de passport
@@ -62,32 +35,7 @@ initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
-//configuracion motor de plantillas
-app.engine(".hbs",handlebars.engine({extname: '.hbs'}));
-app.set('views',path.join(__dirname, "/views"));
-app.set("view engine", ".hbs");
-
 //routes
-app.use(webRouter);
+app.use("/api/sessions", authRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
-app.use("/api/sessions", authRouter);
-app.use("/api", sessionRouter)
-
-////configuración socket servidor
-// const messages=[];
-socketServer.on("connection",async(socketConnected)=>{
-    console.log(`Nuevo cliente conectado ${socketConnected.id}`);
-    const messages = await chatManager.getMessages();
-    socketServer.emit("msgHistory", messages);
-    //capturamos un evento del socket del cliente
-    socketConnected.on("message",async(data)=>{
-        //recibimos el msg del cliente y lo guardamos en el servidor con el id del socket.
-        await chatManager.addMessage(data);
-        const messages = await chatManager.getMessages();
-        // messages.push({socketId: socketConnected.id, message: data});
-        //Enviamos todos los mensajes a todos los clientes
-        socketServer.emit("msgHistory", messages);
-    });
-});
-

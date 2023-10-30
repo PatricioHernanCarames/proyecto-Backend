@@ -1,43 +1,10 @@
 import passport from "passport";
 import LocalStrategy  from "passport-local";
-import GitHubStrategy from "passport-github2"
 import { UserModel } from "../daos/models/user.model.js";
 import { createHash, isValidPassword } from "../utils.js";
 
-
-import dotenv from 'dotenv';
-
-dotenv.config({ path: './process.env' })
-
-
-
 export const initializePassport = ()=>{
-
-    passport.use('github', new GitHubStrategy({
-        clientID: process.env.CLIENT_ID,
-        clientSecret: process.env.CLIENT_SECRET,
-        callbackURL: process.env.CALLBACK_URL
-    }, async (accessToken, refreshToken, profile, done) => {
-        try {
-            console.log(profile);
-            let user = await UserModel.findOne({ email: profile._json.email });
-            if (!user) {
-                let newUser = {
-                    first_name: profile._json.name,  // adjusted this from email to name
-                    last_name: profile._json.surname || '',  // assuming a surname field exists
-                    email: profile._json.email,
-                    // No password since it's an OAuth user
-                }
-                let result = await UserModel.create(newUser);
-                done(null, result);
-            } else {
-                done(null, user);
-            }
-        } catch (error) {
-            return done(error);
-        }
-    }));
-    
+    //Estrategia de registro
     passport.use("signupStrategy", new LocalStrategy(
         {
             usernameField:"email",
@@ -50,17 +17,17 @@ export const initializePassport = ()=>{
                 if(user){
                     return done(null,false)
                 }
-                
-                let role='user';
+                //crear el usuario
+                let rol='user';
                 if (username.endsWith("@coder.com")) {
-                    role = "admin";
+                    rol = "admin";
                 }
-                
+                //si no existe el usuario lo registramos
                 const newUser = {
                     name,
                     email:username,
                     password:createHash(password),
-                    role
+                    rol
                 };
                 const userCreated = await UserModel.create(newUser);
                 return done(null,userCreated)
@@ -93,11 +60,10 @@ export const initializePassport = ()=>{
     //serializacion y deserializacion
     passport.serializeUser((user,done)=>{
         done(null,user._id)
-    });
+    });//sesion {cookie, passport:user:id}
 
     passport.deserializeUser(async(id,done)=>{
         const userDB = await UserModel.findById(id);
         done(null, userDB)
-    });
+    });//req.user = userDB
 }
-

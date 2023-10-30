@@ -1,9 +1,9 @@
 import dotenv from 'dotenv';
 
-dotenv.config({ path: '../../.env' });
+dotenv.config({ path: '../process.env' });
 
 
-const mongoURL = process.env.DATABASE_URL;
+
 
 export const options = {
     fileSystem:{
@@ -11,6 +11,10 @@ export const options = {
         productsFileName: 'products.json',
     },
     mongoDB:{
-        url:mongoURL
+        url: process.env.DATABASE_URL
+    },
+    server:{
+        port:process.env.PORT
+
     }
 };
