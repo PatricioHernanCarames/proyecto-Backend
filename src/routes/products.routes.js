@@ -1,24 +1,30 @@
-import { Router } from "express";
-import {checkRole} from "../middlewares/auth.js";
-import { ProductModel} from "../daos/models/product.model.js";
+import {Router} from "express";
+import {PORT} from "../app.js";
+
+import {ProductManagerMongo} from "../daos/managers/mongo/productManagerMongo.js";
+//importamos el modelo de productos
+import {ProductModel} from "../daos/models/product.model.js";
+import { checkValidProductFields } from "../middlewares/validations.js";
+import { getProducts, productById, addProduct, updateProduct, deleteProduct } from "../controllers/products.controller.js";
+
+
+const productManager = new ProductManagerMongo(ProductModel);
 
 const router = Router();
 
-router.get("/",(req,res)=>{
-    res.send("todos los productos");
-});
 
-router.post("/", checkRole(["admin"]) , async(req,res)=>{
-    try {
-        const productCreated = await ProductModel.create(req.body);
-        res.send(productCreated);
-    } catch (error) {
-        res.send(error.message);
-    }
-});
 
-router.put("/:pid", checkRole(["admin","superadmin"]) , (req,res)=>{
-    res.send("producto agregado");
-});
+router.get("/", getProducts);
 
-export { router as productsRouter}
+router.get("/:pid", productById);
+
+//ruta para agregar un producto
+router.post("/", checkValidProductFields , addProduct);
+
+//ruta para actualizar un producto
+router.put("/:pid",checkValidProductFields, updateProduct);
+
+//ruta para eliminar el producto
+router.delete("/:pid", deleteProduct);
+
+export {router as productsRouter};

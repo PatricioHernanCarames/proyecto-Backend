@@ -1,68 +1,46 @@
 import { Router } from "express";
-import { CartModel} from "../daos/models/cart.model.js";
-import { ProductModel} from "../daos/models/product.model.js";
-import {v4 as uuidv4} from 'uuid';
+// import { CartManagerFile } from "../daos/managers/cartManagerFile.js";
+// import { ProductManagerFile } from "../daos/managers/productManagerFile.js";
+import {
+  addCart,
+  viewCart,
+  addProductToCart,
+  removeProductFromCart,
+  updateProductsInCart,
+  updateCart,
+  updateQuantityInCart,
+  purchaseCart,
+  deleteAllFromCart
+} from "../controllers/carts.controller.js";
 import { ticketsModel } from "../daos/models/ticket.model.js";
+import { v4 as uuidv4 } from "uuid";
 
 const router = Router();
 
-router.post("/",async(req,res)=>{
-    try {
-        const cartCreated = await CartModel.create({});
-        res.send(cartCreated)
-    } catch (error) {
-        res.send(error.message)
-    }
-});
+//agregar carrito
+router.post("/", addCart);
 
-router.put("/",async(req,res)=>{
-    try {
-        const {cartId, productId, quantity} = req.body;
-        const cart = await CartModel.findById(cartId);
-        cart.products.push({id:productId,quantity:quantity});
-        cart.save();
-        res.send("producto agregado")
-    } catch (error) {
-        res.send(error.message)
-    }
-});
+//ruta para listar todos los productos de un carrito
+router.get("/:cid", viewCart);
 
-router.post("/:cid/purchase",async(req,res)=>{
-    try {
-        const cartId = req.params.cid;
-        const cart = await CartModel.findById(cartId);
-        if(cart){
-            if(!cart.products.length){
-                return res.send("es necesario que agrege productos antes de realizar la compra")
-            }
-            const ticketProducts = [];
-            const rejectedProducts = [];
-            for(let i=0; i<cart.products.length;i++){
-                const cartProduct = cart.products[i];
-                const productDB = await ProductModel.findById(cartProduct.id);
-                //comparar la cantidad de ese producto en el carrito con el stock del producto
-                if(cartProduct.quantity<=productDB.stock){
-                    ticketProducts.push(cartProduct);
-                } else {
-                    rejectedProducts.push(cartProduct);
-                }
-            }
-            console.log("ticketProducts",ticketProducts)
-            console.log("rejectedProducts",rejectedProducts)
-            const newTicket = {
-                code:uuidv4(),
-                purchase_datetime: new Date().toLocaleString(),
-                amount:500,
-                purchaser:req.user.email
-            }
-            const ticketCreated = await ticketsModel.create(newTicket);
-            res.send(ticketCreated)
-        } else {
-            res.send("el carrito no existe")
-        }
-    } catch (error) {
-        res.send(error.message)
-    }
-});
+//ruta para agregar un producto al carrito
+router.post("/:cid/product/:pid", addProductToCart);
 
-export {router as cartsRouter}
+//ruta para eliminar un producto del carrito
+router.delete("/:cid/product/:pid", removeProductFromCart);
+
+//ruta para actualizar todos los productos de un carrito.
+router.put("/:cid", updateProductsInCart);
+
+//ruta para actualizar cantidad de un producto en el carrito
+router.put("/:cid", updateCart);
+
+//ruta para actualizar la cantidad de un producto en el carrito
+router.put("/:cid/product/:pid", updateQuantityInCart );
+
+router.post("/:cid/purchase", purchaseCart );
+
+//ruta para eliminar todos los productos del carrito
+router.delete("/:cid", deleteAllFromCart);
+
+export { router as cartsRouter };
