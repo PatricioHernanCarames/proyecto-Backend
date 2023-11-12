@@ -101,3 +101,19 @@ export const deleteProduct =async(req,res)=>{
         res.status(400).json({message:error});
     }
 }
+
+export const mockProducts= async()=>{
+    let products=[];
+    for(let i=1;i<100;i++){
+        products.push({
+            id:faker.datatype.uuid(),
+            name:faker.commerce.productName(),
+            price:faker.commerce.productName(),
+            description:faker.lorem.sentence(),
+            category:faker.commerce.department()
+
+        })
+        }
+    }
+    await product.insertMany(products)
+    return products;

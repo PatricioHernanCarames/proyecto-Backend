@@ -5,7 +5,7 @@ import {ProductManagerMongo} from "../daos/managers/mongo/productManagerMongo.js
 //importamos el modelo de productos
 import {ProductModel} from "../daos/models/product.model.js";
 import { checkValidProductFields } from "../middlewares/validations.js";
-import { getProducts, productById, addProduct, updateProduct, deleteProduct } from "../controllers/products.controller.js";
+import { getProducts, productById, addProduct, updateProduct, deleteProduct, mockProducts } from "../controllers/products.controller.js";
 
 
 const productManager = new ProductManagerMongo(ProductModel);
@@ -26,5 +26,9 @@ router.put("/:pid",checkValidProductFields, updateProduct);
 
 //ruta para eliminar el producto
 router.delete("/:pid", deleteProduct);
+
+router.get("/mocking",(req,res)=>{
+    res.json(mockProducts);
+})
 
 export {router as productsRouter};

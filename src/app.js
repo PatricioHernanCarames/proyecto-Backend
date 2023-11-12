@@ -12,6 +12,7 @@ import minimist from "minimist";
 
 
 
+
 import{__dirname} from "./utils.js";
 import { productsRouter } from "./routes/products.routes.js";
 import {sessionRouter} from "../src/routes/session.routes.js"
@@ -23,7 +24,7 @@ import { chatManagerMongo } from "./daos/managers/mongo/chatManagerMongo.js";
 import { ChatModel} from "./daos/models/chat.model.js";
 import { authRouter } from "./routes/auth.routes.js";
 import { initializePassport } from "./config/passport.config.js";
-
+import errorHandler from "./middlewares/errors/index.js"
 
 dotenv.config({ path: './process.env' });  // Assuming your .env file is at the root of your project
 
@@ -60,6 +61,7 @@ const socketServer = new Server(httpServer);
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(express.static(path.join(__dirname,"/public")));
+app.use(errorHandler);
 
 httpServer.on('error', error => console.log(`Error in server ${error}`));
 
