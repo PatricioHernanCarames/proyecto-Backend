@@ -4,16 +4,21 @@ import { UserModel } from "../daos/models/user.model.js";
 import UserSignupDTO from '../daos/DTOs/user.dto.js';
 import passport from "passport";
 import {generateToken, authToken} from "../utils.js"
-import userSignupController from "../controllers/user.controller.js";
+import {userSignupController, userConfirmation, updateUserRoleController} from "../controllers/user.controller.js";
+
 
 
 const router = Router();
-const userManager = new UserManagerMongo(UserModel);
+
 
 let users =[];
 
 
 router.post("/signup",userSignupController);
+
+router.get('confirm/:token',userConfirmation, )
+
+router.put("/users/premium/:uid", updateUserRoleController);
 
 router.post("/login", passport.authenticate("loginStrategy", {
     failureRedirect: "/api/sessions/failure-login"

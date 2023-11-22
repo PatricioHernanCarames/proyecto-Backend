@@ -31,17 +31,21 @@ export const addProductToCart = async (req, res) => {
     const cartId = req.params.cid;
     const productId = req.params.pid;
     const cart = await cartManager.getCartById(cartId);
-    // console.log("cart: ", cart);
     const product = await productManager.getProductById(productId);
-    // console.log("product: ", product);
+
+    // Verificar si el usuario tiene permisos para agregar el producto al carrito
+    if (req.user.role === 'premium' && req.user.email === product.owner) {
+      return res.status(403).json({ status: 'error', message: 'Premium users cannot add their own products to the cart' });
+    }
+
     const cartUpdated = await cartManager.addProductToCart(cartId, productId);
     res.json({
-      status: "success",
+      status: 'success',
       result: cartUpdated,
-      message: "product added",
+      message: 'Product added to cart',
     });
   } catch (error) {
-    res.status(400).json({ status: "error", error: error.message });
+    res.status(400).json({ status: 'error', error: error.message });
   }
 };
 
