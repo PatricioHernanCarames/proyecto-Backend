@@ -1,9 +1,5 @@
 import {Router} from "express";
-import {UserManagerMongo} from "../daos/managers/mongo/userManagerMongo.js";
-import { UserModel } from "../daos/models/user.model.js";
-import UserSignupDTO from '../daos/DTOs/user.dto.js';
 import passport from "passport";
-import {generateToken, authToken} from "../utils.js"
 import {userSignupController, userConfirmation, updateUserRoleController} from "../controllers/user.controller.js";
 
 
